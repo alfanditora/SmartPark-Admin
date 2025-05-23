@@ -151,7 +151,6 @@ export default function ActiveParking() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -170,7 +169,6 @@ export default function ActiveParking() {
         </div>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center justify-between">
@@ -213,7 +211,6 @@ export default function ActiveParking() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -247,7 +244,6 @@ export default function ActiveParking() {
         </div>
       </div>
 
-      {/* Active Sessions Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">

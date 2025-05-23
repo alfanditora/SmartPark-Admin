@@ -354,7 +354,6 @@ export default function UsersManagement() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -369,7 +368,6 @@ export default function UsersManagement() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -403,7 +401,6 @@ export default function UsersManagement() {
         </div>
       </div>
 
-      {/* Users Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -505,7 +502,6 @@ export default function UsersManagement() {
         </div>
       </div>
 
-      {/* Summary */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4" style={{ color: '#007D4B' }}>
           User Statistics
@@ -538,7 +534,6 @@ export default function UsersManagement() {
         </div>
       </div>
 
-      {/* RFID Modal */}
       <RfidModal
         isOpen={rfidModal.isOpen}
         onClose={handleRfidModalClose}

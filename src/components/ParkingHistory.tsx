@@ -1,7 +1,7 @@
 // components/ParkingHistory.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getStoredToken } from '../utils/auth';
 
 interface ParkingHistoryRecord {
@@ -49,11 +49,7 @@ export default function ParkingHistory() {
   const [sortBy, setSortBy] = useState('in_date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  useEffect(() => {
-    fetchParkingHistory();
-  }, [pagination.page, selectedPaymentStatus, startDate, endDate, sortBy, sortOrder]);
-
-  const fetchParkingHistory = async () => {
+  const fetchParkingHistory = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -115,7 +111,11 @@ export default function ParkingHistory() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, selectedPaymentStatus, startDate, endDate, sortBy, sortOrder]);
+
+  useEffect(() => {
+    fetchParkingHistory();
+  }, [fetchParkingHistory]);
 
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -158,7 +158,6 @@ export default function ParkingHistory() {
 
   const handleApplyFilters = () => {
     setPagination(prev => ({ ...prev, page: 1 }));
-    fetchParkingHistory();
   };
 
   const clearFilters = () => {
@@ -209,7 +208,6 @@ export default function ParkingHistory() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -224,7 +222,6 @@ export default function ParkingHistory() {
         </div>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow-md p-4">
           <div className="flex items-center justify-between">
@@ -281,7 +278,6 @@ export default function ParkingHistory() {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           <div>
@@ -392,7 +388,6 @@ export default function ParkingHistory() {
         </div>
       </div>
 
-      {/* History Records Table */}
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -511,7 +506,6 @@ export default function ParkingHistory() {
         </div>
       </div>
 
-      {/* Pagination */}
       {pagination.pages > 1 && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">

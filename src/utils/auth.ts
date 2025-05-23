@@ -1,4 +1,6 @@
 // utils/auth.ts
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+
 interface User {
   userID: string;
   username: string;
@@ -52,7 +54,7 @@ export const isAuthenticated = (): boolean => {
   }
 };
 
-export const redirectIfNotAuthenticated = (router: any): boolean => {
+export const redirectIfNotAuthenticated = (router: AppRouterInstance): boolean => {
   if (!isAuthenticated()) {
     router.push('/login');
     return false;

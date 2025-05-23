@@ -1,9 +1,13 @@
-// src/app/dashboard/page.tsx
+// pages/admin/dashboard.tsx atau app/admin/dashboard/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { getStoredUser, removeStoredAuth, redirectIfNotAuthenticated } from '../../utils/auth';
+import UsersManagement from '../../components/UsersManagement';
+import ActiveParking from '../../components/ActiveParking';
+import ParkingHistory from '../../components/ParkingHistory';
 
 interface User {
   userID: string;
@@ -25,30 +29,18 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    // Simple auth check
-    const token = localStorage.getItem('token');
-    const userData = localStorage.getItem('user');
-    
-    if (!token || !userData) {
-      router.push('/login');
+    // Cek authentication saat component mount
+    if (!redirectIfNotAuthenticated(router)) {
       return;
     }
 
-    try {
-      const parsedUser = JSON.parse(userData);
-      setUser(parsedUser);
-    } catch (error) {
-      console.error('Error parsing user data:', error);
-      router.push('/login');
-      return;
-    }
-    
+    const userData = getStoredUser();
+    setUser(userData);
     setIsLoading(false);
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    removeStoredAuth();
     router.push('/login');
   };
 
@@ -64,20 +56,20 @@ export default function AdminDashboard() {
   }
 
   const navigationItems = [
-    { id: 'overview', label: 'Dashboard' },
-    { id: 'users', label: 'Users' },
-    { id: 'active-parking', label: 'Active Parking' },
-    { id: 'parking-history', label: 'Parking History' },
+    { id: 'overview', label: 'Dashboard'},
+    { id: 'users', label: 'Users'},
+    { id: 'active-parking', label: 'Active Parking'},
+    { id: 'parking-history', label: 'Parking History'},
   ];
 
   const renderContent = () => {
     switch (activeView) {
       case 'users':
-        return <div className="p-6 bg-white rounded-lg">Users Management - Coming Soon</div>;
+        return <UsersManagement />;
       case 'active-parking':
-        return <div className="p-6 bg-white rounded-lg">Active Parking - Coming Soon</div>;
+        return <ActiveParking />;
       case 'parking-history':
-        return <div className="p-6 bg-white rounded-lg">Parking History - Coming Soon</div>;
+        return <ParkingHistory />;
       default:
         return renderOverview();
     }
@@ -92,6 +84,7 @@ export default function AdminDashboard() {
         <p className="text-gray-600 mb-4">
           Selamat datang di SmartPark Admin Dashboard. Pantau aktivitas parkir, kelola pengguna, dan akses data penting secara real-time dari satu tempat.
         </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -146,9 +139,13 @@ export default function AdminDashboard() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="mr-3">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#007D4B' }}>
-                  <span className="text-white font-bold text-lg">SP</span>
-                </div>
+                <Image 
+                  src="/assets/images/GOicon.png" 
+                  alt="SmartPark Icon" 
+                  width={80} 
+                  height={80}
+                  className="w-20 h-20"
+                />
               </div>
               <h1 className="text-xl font-bold" style={{ color: '#000000' }}>
                 SmartPark Admin
@@ -157,7 +154,7 @@ export default function AdminDashboard() {
             
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                Welcome, <span className="font-medium" style={{ color: '#007D4B' }}>{user?.username || 'Admin'}</span>
+                Welcome, <span className="font-medium" style={{ color: '#007D4B' }}>{user?.username}</span>
               </div>
               <button
                 onClick={handleLogout}
