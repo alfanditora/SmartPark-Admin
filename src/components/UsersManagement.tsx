@@ -238,11 +238,14 @@ export default function UsersManagement() {
 
   useEffect(() => {
     fetchUsers();
+    
+    // Auto refresh every 30 seconds
+    const interval = setInterval(fetchUsers, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const fetchUsers = async () => {
     try {
-      setIsLoading(true);
       setError(null);
       
       const auth = getStoredToken();
@@ -360,7 +363,11 @@ export default function UsersManagement() {
             <h2 className="text-2xl font-bold" style={{ color: '#007D4B' }}>Users Management</h2>
             <p className="text-gray-600 mt-1">Manage all registered users in the system</p>
           </div>
-          <div className="mt-4 sm:mt-0">
+          <div className="mt-4 sm:mt-0 flex items-center space-x-4">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: '#007D4B' }}></div>
+              <span className="text-sm text-gray-600">Auto-refresh every 30s</span>
+            </div>
             <span className="px-3 py-1 text-sm font-medium rounded-full text-white" style={{ backgroundColor: '#E62132' }}>
               Total: {users.length} users
             </span>

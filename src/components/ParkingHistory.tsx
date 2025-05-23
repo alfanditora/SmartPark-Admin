@@ -115,6 +115,10 @@ export default function ParkingHistory() {
 
   useEffect(() => {
     fetchParkingHistory();
+    
+    // Auto refresh every 60 seconds (can be adjusted as needed)
+    const interval = setInterval(fetchParkingHistory, 60000);
+    return () => clearInterval(interval);
   }, [fetchParkingHistory]);
 
   const formatDateTime = (dateString: string) => {
@@ -214,7 +218,11 @@ export default function ParkingHistory() {
             <h2 className="text-2xl font-bold" style={{ color: '#007D4B' }}>Parking History</h2>
             <p className="text-gray-600 mt-1">View all completed parking sessions and transactions</p>
           </div>
-          <div className="mt-4 sm:mt-0">
+          <div className="mt-4 sm:mt-0 flex items-center space-x-4">
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: '#007D4B' }}></div>
+              <span className="text-sm text-gray-600">Auto-refresh every 60s</span>
+            </div>
             <span className="px-3 py-1 text-sm font-medium rounded-full text-white" style={{ backgroundColor: '#E62132' }}>
               Total: {pagination.total} records
             </span>
