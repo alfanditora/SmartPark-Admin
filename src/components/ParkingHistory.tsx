@@ -411,9 +411,6 @@ export default function ParkingHistory() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Total Bill
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -482,20 +479,6 @@ export default function ParkingHistory() {
                         <div className="text-sm font-medium text-gray-900">
                           {formatCurrency(record.total_billing)}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          className="text-white hover:opacity-80 px-3 py-1 rounded text-xs transition-opacity mr-2"
-                          style={{ backgroundColor: '#007D4B' }}
-                        >
-                          View Details
-                        </button>
-                        <button
-                          className="text-white hover:opacity-80 px-3 py-1 rounded text-xs transition-opacity"
-                          style={{ backgroundColor: '#E62132' }}
-                        >
-                          Export
-                        </button>
                       </td>
                     </tr>
                   );

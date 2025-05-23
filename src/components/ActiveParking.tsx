@@ -267,9 +267,6 @@ export default function ActiveParking() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Current Bill
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -336,22 +333,6 @@ export default function ActiveParking() {
                         <div className="text-sm font-medium text-gray-900">
                           {formatCurrency(session.total_billing)}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button
-                          className="text-white hover:opacity-80 px-3 py-1 rounded text-xs transition-opacity mr-2"
-                          style={{ backgroundColor: '#007D4B' }}
-                        >
-                          View Details
-                        </button>
-                        {session.payment_status === 'pending' && (
-                          <button
-                            className="text-white hover:opacity-80 px-3 py-1 rounded text-xs transition-opacity"
-                            style={{ backgroundColor: '#E62132' }}
-                          >
-                            Process Payment
-                          </button>
-                        )}
                       </td>
                     </tr>
                   );
