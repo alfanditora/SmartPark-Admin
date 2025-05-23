@@ -12,25 +12,44 @@ interface User {
 
 export const getStoredToken = (): string | null => {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem('token');
+  try {
+    return localStorage.getItem('token');
+  } catch (error) {
+    console.error('Error accessing localStorage for token:', error);
+    return null;
+  }
 };
 
 export const getStoredUser = (): User | null => {
   if (typeof window === 'undefined') return null;
-  const userStr = localStorage.getItem('user');
-  return userStr ? JSON.parse(userStr) : null;
+  try {
+    const userStr = localStorage.getItem('user');
+    return userStr ? JSON.parse(userStr) : null;
+  } catch (error) {
+    console.error('Error accessing localStorage for user:', error);
+    return null;
+  }
 };
 
 export const removeStoredAuth = (): void => {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  try {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  } catch (error) {
+    console.error('Error removing stored auth:', error);
+  }
 };
 
 export const isAuthenticated = (): boolean => {
-  const token = getStoredToken();
-  const user = getStoredUser();
-  return !!(token && user && user.role === 'admin');
+  try {
+    const token = getStoredToken();
+    const user = getStoredUser();
+    return !!(token && user && user.role === 'admin');
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    return false;
+  }
 };
 
 export const redirectIfNotAuthenticated = (router: any): boolean => {
@@ -48,11 +67,11 @@ export const authenticatedFetch = async (url: string, options: RequestInit = {})
   const headers = {
     'Content-Type': 'application/json',
     ...(token && { Authorization: `Bearer ${token}` }),
-    ...options.headers,
+    ...options.headers
   };
 
   return fetch(url, {
     ...options,
-    headers,
+    headers
   });
 };

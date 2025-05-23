@@ -11,28 +11,49 @@ export default function NotFoundPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const token = getStoredToken();
-    setIsLoggedIn(!!token);
-    setIsLoading(false);
+    // Add try-catch to handle any potential localStorage issues
+    try {
+      const token = getStoredToken();
+      setIsLoggedIn(!!token);
+    } catch (error) {
+      console.error('Error checking authentication:', error);
+      setIsLoggedIn(false);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   const handleGoHome = () => {
-    if (isLoggedIn) {
-      router.push('/dashboard');
-    } else {
-      router.push('/');
-    };
+    try {
+      if (isLoggedIn) {
+        router.push('/dashboard');
+      } else {
+        router.push('/');
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
   };
 
   const handleGoBack = () => {
-    router.back();
+    try {
+      router.back();
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
+  };
+
+  const handleNavigation = (path: string) => {
+    try {
+      router.push(path);
+    } catch (error) {
+      console.error('Navigation error:', error);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#F9F3C7' }}>
       <div className="text-center">
-        {/* Large 404 Number */}
         <div className="mb-8">
           <h1 className="text-9xl font-bold" style={{ color: '#E62132' }}>
             404
@@ -42,18 +63,16 @@ export default function NotFoundPage() {
           </div>
         </div>
 
-        {/* Error Message */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold mb-4" style={{ color: '#007D4B' }}>
             Oops! Page Not Found
           </h2>
           <p className="text-gray-600 text-lg max-w-md mx-auto leading-relaxed">
-            The page you're looking for seems to have driven away. 
+            The page you&apos;re looking for seems to have driven away. 
             It might have been moved, deleted, or you entered the wrong URL.
           </p>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={handleGoHome}
@@ -75,7 +94,6 @@ export default function NotFoundPage() {
           </button>
         </div>
 
-        {/* Helpful Links */}
         <div className="mt-12">
           <p className="text-gray-500 mb-4">You might be looking for:</p>
           {isLoading ? (
@@ -85,74 +103,34 @@ export default function NotFoundPage() {
           ) : (
             <div className="flex flex-wrap justify-center gap-4">
               {isLoggedIn ? (
-                // Links for logged-in users
-                <>
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
-                    style={{ 
-                      color: '#007D4B', 
-                      borderColor: '#007D4B',
-                      backgroundColor: 'white'
-                    }}
-                  >
-                    📊 Dashboard
-                  </button>
-                  <button
-                    onClick={() => router.push('/users')}
-                    className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
-                    style={{ 
-                      color: '#007D4B', 
-                      borderColor: '#007D4B',
-                      backgroundColor: 'white'
-                    }}
-                  >
-                    👥 Users Management
-                  </button>
-                  <button
-                    onClick={() => router.push('/parking')}
-                    className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
-                    style={{ 
-                      color: '#007D4B', 
-                      borderColor: '#007D4B',
-                      backgroundColor: 'white'
-                    }}
-                  >
-                    🚗 Parking Management
-                  </button>
-                  <button
-                    onClick={() => router.push('/profile')}
-                    className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
-                    style={{ 
-                      color: '#007D4B', 
-                      borderColor: '#007D4B',
-                      backgroundColor: 'white'
-                    }}
-                  >
-                    👤 Profile
-                  </button>
-                </>
+                <button
+                  onClick={() => handleNavigation('/dashboard')}
+                  className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
+                  style={{ 
+                    color: '#007D4B', 
+                    borderColor: '#007D4B',
+                    backgroundColor: 'white'
+                  }}
+                >
+                  📊 Dashboard
+                </button>
               ) : (
-                // Links for non-logged-in users
-                <>
-                  <button
-                    onClick={() => router.push('/login')}
-                    className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
-                    style={{ 
-                      color: '#007D4B', 
-                      borderColor: '#007D4B',
-                      backgroundColor: 'white'
-                    }}
-                  >
-                    🔐 Login
-                  </button>
-                </>
+                <button
+                  onClick={() => handleNavigation('/login')}
+                  className="text-sm px-4 py-2 rounded-full border hover:opacity-80 transition-opacity"
+                  style={{ 
+                    color: '#007D4B', 
+                    borderColor: '#007D4B',
+                    backgroundColor: 'white'
+                  }}
+                >
+                  🔐 Login
+                </button>
               )}
             </div>
           )}
         </div>
 
-        {/* Footer */}
         <div className="mt-16">
           <p className="text-gray-400 text-sm">
             SmartPark System © 2025

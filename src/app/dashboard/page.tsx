@@ -1,12 +1,9 @@
-// pages/admin/dashboard.tsx atau app/admin/dashboard/page.tsx
+// src/app/dashboard/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getStoredUser, removeStoredAuth, redirectIfNotAuthenticated } from '../../utils/auth';
-import UsersManagement from '../../components/UsersManagement';
-import ActiveParking from '../../components/ActiveParking';
-import ParkingHistory from '../../components/ParkingHistory';
+import Image from 'next/image';
 
 interface User {
   userID: string;
@@ -28,18 +25,30 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    // Cek authentication saat component mount
-    if (!redirectIfNotAuthenticated(router)) {
+    // Simple auth check
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    
+    if (!token || !userData) {
+      router.push('/login');
       return;
     }
 
-    const userData = getStoredUser();
-    setUser(userData);
+    try {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      router.push('/login');
+      return;
+    }
+    
     setIsLoading(false);
   }, [router]);
 
   const handleLogout = () => {
-    removeStoredAuth();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     router.push('/login');
   };
 
@@ -55,20 +64,20 @@ export default function AdminDashboard() {
   }
 
   const navigationItems = [
-    { id: 'overview', label: 'Dashboard'},
-    { id: 'users', label: 'Users'},
-    { id: 'active-parking', label: 'Active Parking'},
-    { id: 'parking-history', label: 'Parking History'},
+    { id: 'overview', label: 'Dashboard' },
+    { id: 'users', label: 'Users' },
+    { id: 'active-parking', label: 'Active Parking' },
+    { id: 'parking-history', label: 'Parking History' },
   ];
 
   const renderContent = () => {
     switch (activeView) {
       case 'users':
-        return <UsersManagement />;
+        return <div className="p-6 bg-white rounded-lg">Users Management - Coming Soon</div>;
       case 'active-parking':
-        return <ActiveParking />;
+        return <div className="p-6 bg-white rounded-lg">Active Parking - Coming Soon</div>;
       case 'parking-history':
-        return <ParkingHistory />;
+        return <div className="p-6 bg-white rounded-lg">Parking History - Coming Soon</div>;
       default:
         return renderOverview();
     }
@@ -76,7 +85,6 @@ export default function AdminDashboard() {
 
   const renderOverview = () => (
     <>
-      {/* Welcome Card */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 className="text-2xl font-bold mb-2" style={{ color: '#000000' }}>
           Dashboard Overview
@@ -84,10 +92,8 @@ export default function AdminDashboard() {
         <p className="text-gray-600 mb-4">
           Selamat datang di SmartPark Admin Dashboard. Pantau aktivitas parkir, kelola pengguna, dan akses data penting secara real-time dari satu tempat.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
       </div>
 
-      {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold mb-4" style={{ color: '#007D4B' }}>
           Quick Actions
@@ -135,13 +141,14 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F9F3C7' }}>
-      {/* Header */}
       <header className="bg-white shadow-sm border-b-2" style={{ borderColor: '#007D4B' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="mr-3">
-                <img src="/assets/images/GOicon.png" alt="SmartPark Icon" className="w-20 h-20" />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#007D4B' }}>
+                  <span className="text-white font-bold text-lg">SP</span>
+                </div>
               </div>
               <h1 className="text-xl font-bold" style={{ color: '#000000' }}>
                 SmartPark Admin
@@ -150,7 +157,7 @@ export default function AdminDashboard() {
             
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600">
-                Welcome, <span className="font-medium" style={{ color: '#007D4B' }}>{user?.username}</span>
+                Welcome, <span className="font-medium" style={{ color: '#007D4B' }}>{user?.username || 'Admin'}</span>
               </div>
               <button
                 onClick={handleLogout}
@@ -164,7 +171,6 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* Navigation */}
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
@@ -186,7 +192,6 @@ export default function AdminDashboard() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderContent()}
       </main>
